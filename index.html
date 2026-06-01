@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* ওয়েবসাইটের মূল ডিজাইন */
+        body {
+            background: linear-gradient(135deg, #050721, #0b0e38);
+            color: white;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
+        .top-banner { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); padding: 18px 15px; border-radius: 50px; font-size: 15px; margin: 20px 0; line-height: 1.4; }
+        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        h2 { font-size: 20px; color: #ffffff; margin-bottom: 15px; }
+        
+        /* ৩ কলামের ক্যাটাগরি গ্রিড */
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .cat-btn { background: #11143a; border: 1px solid #1f245c; color: white; padding: 15px 5px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .cat-btn:hover { background: #191e5a; border-color: #31388a; }
+        .cat-icon { display: block; margin: 0 auto 10px auto; width: 40px; height: 40px; }
+        
+        /* সার্ভিস লিস্ট ডিজাইন */
+        .service-btn { background: #11143a; border: 1px solid #1f245c; color: white; padding: 15px; margin: 8px 0; border-radius: 10px; cursor: pointer; width: 100%; font-size: 15px; text-align: left; display: flex; flex-direction: column; }
+        .service-price { color: #00d2ff; font-size: 13px; margin-top: 5px; font-weight: bold; }
+        
+        /* অর্ডার বক্স */
+        .order-box { background: #11143a; border: 1px solid #1f245c; padding: 20px; border-radius: 15px; margin-top: 15px; text-align: left; }
+        label { font-size: 13px; color: #b3b3cc; margin-bottom: 5px; display: block; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #2a3075; background: #090b24; color: white; font-size: 15px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #00d2ff; }
+        .total-price-display { text-align: center; font-size: 18px; color: #fff; background: #f4511e; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; }
+        
+        /* Order Now বাটন */
+        .order-btn { background-color: #25D366; color: white; padding: 14px; border-radius: 8px; width: 100%; border: none; display: block; text-align: center; font-size: 16px; font-weight: bold; text-decoration: none; box-sizing: border-box; cursor: pointer; }
+        
+        /* ফিরে যান এবং বন্ধ করুন বাটনের ডিজাইন */
+        .back-btn { background: rgba(255, 71, 87, 0.12); color: #ff4757; border: 1px solid #ff4757; padding: 12px; margin-top: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; transition: 0.2s; }
+        .back-btn:hover { background: #ff4757; color: white; }
+
+        /* ফুটার ও পেমেন্ট সেকশন */
+        .footer-text-box { margin-top: 30px; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.07); font-size: 14px; line-height: 1.6; color: #e0e0ff; }
+        .footer-text-box a { color: #25D366; text-decoration: none; font-weight: bold; }
+        .payment-title { margin-top: 25px; font-size: 15px; color: #8f8fb3; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        
+        /* পেমেন্ট অপশন লোগো ডিজাইন */
+        .payment-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding-bottom: 35px; align-items: center; }
+        
+        /* পেমেন্ট লোগো হিসেবে আমরা CSS দিয়ে তৈরি করা ব্যাজ ব্যবহার করবো, যাতে কোনো ব্রাউজারে ব্লক না হয় */
+        .pay-badge-style { 
+            font-size: 13px; 
+            font-weight: bold; 
+            padding: 8px 12px; 
+            border-radius: 8px; 
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            min-width: 65px;
+            height: 38px;
+            box-sizing: border-box;
+        }
+        
+        /* লোগো ও লেখার ব্যাকগ্রাউন্ড ও কালার */
+        .bkash { background: #df146e; color: white; font-style: italic; font-family: 'Georgia', serif; }
+        .nagad { background: #f37021; color: white; font-weight: 900; }
+        .rocket { background: #8c1560; color: white; font-style: italic; }
+        .dbbl { background: #006a4e; color: white; font-weight: 800; font-size: 12px;} /* DBBL এর জন্য একটু ছোট ফন্ট */
+        .upay { background: #ffc425; color: #121212; font-weight: 900; font-style: italic;}
+        .visa { background: #1A1F71; color: white; font-weight: 900; font-style: italic; font-size: 15px; letter-spacing: 0.5px; }
+        
+        /* মাস্টারকার্ড কন্টেইনার ব্যাজ */
+        .mastercard-badge {
+            background: #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            min-width: 65px;
+            height: 38px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .mc-circles {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 36px;
+            height: 22px;
+        }
+        .mc-circle-red {
+            width: 22px;
+            height: 22px;
+            background: #EB001B;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+        }
+        .mc-circle-orange {
+            width: 22px;
+            height: 22px;
+            background: #F79E1B;
+            border-radius: 50%;
+            position: absolute;
+            right: 0;
+            opacity: 0.9;
+        }
+
+        /* অফ-স্ক্রিন রিসিপ্ট ডিজাইন (ছবি বানানোর জন্য) */
+        #receiptBox { position: fixed; top: -9999px; left: -9999px; width: 340px; background: #ffffff; color: #000000; padding: 25px; border-radius: 10px; font-family: Arial, sans-serif; box-sizing: border-box; }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #999; padding-bottom: 15px; margin-bottom: 15px; }
+        .receipt-header h2 { margin: 0 0 5px 0; color: #1a1c4b; font-size: 22px; }
+        .receipt-header p { margin: 5px 0 0 0; color: #666; font-size: 13px; }
+        .r-row { margin-bottom: 12px; font-size: 15px; word-wrap: break-word; }
+        .r-row strong { color: #333; }
+        .r-total { text-align: right; border-top: 2px dashed #999; padding-top: 15px; margin-top: 15px; font-size: 20px; font-weight: bold; color: #e63946; }
+
+        /* ইনস্ট্রাকশন মোডাল (পপ-আপ) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; overflow-y: auto;}
+        .modal-content { background: #11143a; padding: 25px 20px; border-radius: 15px; text-align: center; width: 100%; max-width: 400px; border: 1px solid #1f245c; margin: auto;}
+        .modal-content p { color: #d1d1e0; margin-bottom: 15px; font-size: 14px; line-height: 1.5; }
+        #generatedReceiptImg { width: 100%; border-radius: 10px; border: 2px solid #fff; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .payment-instruction { background: rgba(255, 183, 3, 0.1); color: #ffb703; border: 1px dashed #ffb703; padding: 10px; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 13px; line-height: 1.4; margin-top: 10px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="homePage" class="page active">
+        <div class="top-banner">আপনি যে সার্ভিসটির দাম ও বিস্তারিত জানতে চান, সেটির উপর ক্লিক করুন।</div>
+        
+        <div class="category-grid">
+            <button class="cat-btn" onclick="openCategory('facebook', 'Facebook')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path d="M14 12h-2v7h-3v-7H8V9h1V7.5C9 5.5 10.2 4 13 4h2v3h-1.5C12.8 7 12.5 7.3 12.5 8V9H15l-.5 3z" fill="#fff"/></svg> Facebook
+            </button>
+            <button class="cat-btn" onclick="openCategory('youtube', 'YouTube')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><path d="M9.5 8.5v7l6-3.5-6-3.5z" fill="#fff"/></svg> YouTube
+            </button>
+            <button class="cat-btn" onclick="openCategory('instagram', 'Instagram')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fec564"/><stop offset="25%" stop-color="#f9373f"/><stop offset="60%" stop-color="#c92bb7"/><stop offset="100%" stop-color="#4c5fd7"/></linearGradient></defs><rect width="24" height="24" rx="6" fill="url(#ig)"/><rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="0.7.5" fill="#fff"/></svg> Instagram
+            </button>
+            <button class="cat-btn" onclick="openCategory('tiktok', 'TikTok')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000"/><path d="M16.5 10.5c-1.5 0-2.5-.5-3-1.5V14c0 2.5-2 4.5-4.5 4.5S4.5 16.5 4.5 14s2-4.5 4.5-4.5c.5 0 1 .1 1.5.3V12c-.5-.2-1-.3-1.5-.3-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5V6h3c0 1.5 1 2.5 2.5 2.5v2z" fill="#fff"/></svg> TikTok
+            </button>
+            <button class="cat-btn" onclick="openCategory('telegram', 'Telegram')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path d="M5.5 11.5l13-5-2 11-3.5-3-2 2-.5-3.5 5-4.5-6.5 4-3.5-1z" fill="#fff"/></svg> Telegram
+            </button>
+            <button class="cat-btn" onclick="openCategory('linkedin', 'LinkedIn')">
+                <svg class="cat-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#0A66C2"/><text x="5" y="17" fill="#fff" font-family="sans-serif" font-weight="bold" font-size="13">in</text></svg> LinkedIn
+            </button>
+        </div>
+
+        <div class="footer-text-box">
+            আপনার মনের সকল প্রশ্নের উত্তর দ্রুত পেতে এবং অর্ডার কমপ্লিট করতে আমাদের <a href="https://wa.me/8801845434763" target="_blank">+8801845434763</a> (WhatsApp) এ যোগাযোগ করেন।
+        </div>
+
+        <div class="payment-title">Payment Option</div>
+        
+        <div class="payment-grid">
+            <div class="pay-badge-style bkash">bKash</div>
+            <div class="pay-badge-style nagad">Nagad</div>
+            <div class="pay-badge-style rocket">Rocket</div>
+            <div class="pay-badge-style dbbl">DBBL</div>
+            <div class="pay-badge-style upay">upay</div>
+            <div class="pay-badge-style visa">VISA</div>
+            
+            <div class="mastercard-badge">
+                <div class="mc-circles">
+                    <div class="mc-circle-red"></div>
+                    <div class="mc-circle-orange"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="servicePage" class="page">
+        <h2 id="catTitle">সার্ভিসসমূহ</h2>
+        <div id="serviceList"></div>
+        <button class="back-btn" onclick="showPage('homePage')">⬅ ফিরে যান</button>
+    </div>
+
+    <div id="orderPage" class="page">
+        <h2 id="serviceNameDisplay">সার্ভিস নেম</h2>
+        <p style="color: #00d2ff; font-size: 15px; font-weight: bold;">মূল্য: <span id="priceDisplay">0</span></p>
+        
+        <div class="order-box">
+            <label id="quantityLabel">পরিমাণ লিখুন:</label>
+            <input type="number" id="quantity" placeholder="সংখ্যা লিখুন..." oninput="calculateTotal()">
+            
+            <label>আপনার প্রোফাইল/পেইজ বা পোস্টের লিংক দিন:</label>
+            <input type="text" id="link" placeholder="লিংক এখানে পেস্ট করুন..." oninput="calculateTotal()">
+            
+            <div class="total-price-display">মোট দাম: <span id="totalPrice">0</span> টাকা</div>
+            
+            <button class="order-btn" onclick="generateReceiptImage()">Order Now</button>
+        </div>
+        <button class="back-btn" onclick="showPage('servicePage')">⬅ ফিরে যান</button>
+    </div>
+</div>
+
+<div id="receiptBox">
+    <div class="receipt-header">
+        <h2>Order Receipt</h2>
+        <p>Social Media Services</p>
+    </div>
+    <div class="r-row"><strong>Service:</strong> <span id="r_service"></span></div>
+    <div class="r-row"><strong>Quantity:</strong> <span id="r_qty"></span></div>
+    <div class="r-row"><strong>Link:</strong> <span id="r_link" style="word-break: break-all;"></span></div>
+    <div class="r-total">Total: ৳<span id="r_total">0</span></div>
+</div>
+
+<div id="receiptModal" class="modal">
+    <div class="modal-content">
+        <h1 style="color: #25D366; font-size: 32px; margin: 0 0 10px 0; font-weight: 900; text-shadow: 0 2px 5px rgba(0,0,0,0.6);">🎉 অভিনন্দন! 🎉</h1>
+        <h3 style="color: #e0e0ff; font-size: 16px; margin: 0 0 15px 0;">আপনার অর্ডারটি সফলভাবে তৈরি হয়েছে!</h3>
+        
+        <p style="margin-bottom: 10px; font-size: 13px;">নিচের ছবিটি চেপে ধরে সেভ করুন (বা স্ক্রিনশট নিন) এবং আমাদের হোয়াটসঅ্যাপে পাঠিয়ে দিন।</p>
+        
+        <img id="generatedReceiptImg" src="" alt="Receipt">
+        
+        <div class="payment-instruction">
+            01845434763 (bKash/Nagad/Rocket) এ Send Money করে আপনার লাস্ট ডিজিট বা পেমেন্ট এর স্ক্রিনশর্ট দিবেন।
+        </div>
+        
+        <a href="https://wa.me/8801845434763" target="_blank" class="order-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp -এ পাঠান</a>
+        
+        <button class="back-btn" onclick="document.getElementById('receiptModal').style.display='none'">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    const servicesData = {
+        facebook: [
+            { name: "Facebook page Follower (Real Bangladeshi)", price: 99, unit: "হাজার" },
+            { name: "Facebook Personal Profile Follower (Real Bangladeshi)", price: 99, unit: "হাজার" },
+            { name: "Facebook Reels/Video View (Real Organic)", price: 40, unit: "হাজার" },
+            { name: "Facebook Real ID Reaction (Love,care,Like,wow,sad,haha)", price: 65, unit: "হাজার" },
+            { name: "Facebook Custom Comments (নিজের লেখা আইডি থেকে পেস্ট)", price: 150, unit: "একশত" },
+            { name: "Facebook Share", price: 49, unit: "একশত" },
+            { name: "Real WatchTime 60k Minute", price: 299, unit: "প্যাকেজ" },
+            { name: "Facebook post Comment React (Any)", price: 99, unit: "হাজার" }
+        ],
+        instagram: [
+            { name: "Instagram Follower (Bangladeshi Real Account)", price: 220, unit: "হাজার" },
+            { name: "Instagram Follower (Random Real Account)", price: 158, unit: "হাজার" },
+            { name: "Instagram Like (Real Account)", price: 80, unit: "হাজার" },
+            { name: "Instagram Video View (Real Account)", price: 70, unit: "হাজার" },
+            { name: "Instagram Saves (Real Account)", price: 89, unit: "হাজার" }
+        ],
+        youtube: [
+            { name: "YouTube Real Views", price: 120, unit: "হাজার" },
+            { name: "YouTube Real Subscriber", price: 2399, unit: "হাজার" },
+            { name: "YouTube Video Like", price: 449, unit: "হাজার" }
+        ],
+        telegram: [
+            { name: "Telegram Real Subscriber", price: 150, unit: "হাজার" },
+            { name: "Telegram Real Premium Subscriber (+ভিউ)", price: 250, unit: "হাজার" },
+            { name: "Post Reaction", price: 49, unit: "একশত" }
+        ],
+        linkedin: [
+            { name: "LinkedIn Real Follower", price: 3499, unit: "হাজার" },
+            { name: "LinkedIn Likes", price: 1800, unit: "হাজার" }
+        ],
+        tiktok: [
+            { name: "TikTok Follower", price: 449, unit: "হাজার" },
+            { name: "Video Likes", price: 49, unit: "হাজার" },
+            { name: "Video Views", price: 49, unit: "হাজার" }
+        ]
+    };
+
+    let currentSrv = null;
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function openCategory(key, name) {
+        document.getElementById('catTitle').innerText = name + " সার্ভিসসমূহ";
+        const listDiv = document.getElementById('serviceList');
+        listDiv.innerHTML = ''; 
+
+        servicesData[key].forEach(srv => {
+            let btn = document.createElement('button');
+            btn.className = 'service-btn';
+            btn.innerHTML = `<span>${srv.name}</span> <span class="service-price">৳${srv.price} / প্রতি ${srv.unit}</span>`;
+            btn.onclick = () => showOrderPage(srv);
+            listDiv.appendChild(btn);
+        });
+        showPage('servicePage');
+    }
+
+    function showOrderPage(srv) {
+        currentSrv = srv;
+        document.getElementById('serviceNameDisplay').innerText = srv.name;
+        document.getElementById('priceDisplay').innerText = `৳${srv.price} (প্রতি ${srv.unit})`;
+        
+        if(srv.unit === "হাজার") {
+            document.getElementById('quantityLabel').innerText = "কত হাজার নিতে চান? (যেমন: 1 লিখলে ১০০০):";
+        } else if(srv.unit === "একশত") {
+            document.getElementById('quantityLabel').innerText = "কত শত নিতে চান? (যেমন: 1 লিখলে ১০০):";
+        } else {
+            document.getElementById('quantityLabel').innerText = "কয়টি প্যাকেজ নিতে চান?:";
+        }
+
+        document.getElementById('quantity').value = ''; 
+        document.getElementById('link').value = '';
+        document.getElementById('totalPrice').innerText = '0';
+        
+        showPage('orderPage');
+    }
+
+    function calculateTotal() {
+        let qty = document.getElementById('quantity').value;
+        let total = qty * currentSrv.price;
+        document.getElementById('totalPrice').innerText = total;
+    }
+
+    function generateReceiptImage() {
+        let qty = document.getElementById('quantity').value;
+        let link = document.getElementById('link').value;
+        
+        if(qty == '' || qty <= 0 || link == '') {
+            alert("দয়া করে সঠিক পরিমাণ এবং লিংক প্রদান করুন!");
+            return;
+        }
+
+        // পপ-আপের ভেতরের রিসিপ্টে ডাটা বসানো
+        document.getElementById('r_service').innerText = currentSrv.name;
+        document.getElementById('r_qty').innerText = qty + " " + currentSrv.unit;
+        document.getElementById('r_link').innerText = link;
+        document.getElementById('r_total').innerText = document.getElementById('totalPrice').innerText;
+
+        let receiptBox = document.getElementById('receiptBox');
+        let orderBtn = document.querySelector('.order-btn');
+        let originalText = orderBtn.innerText;
+        orderBtn.innerText = "Processing...";
+
+        html2canvas(receiptBox, { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
+            let imgData = canvas.toDataURL("image/jpeg", 1.0);
+            
+            document.getElementById('generatedReceiptImg').src = imgData;
+            document.getElementById('receiptModal').style.display = 'flex';
+            
+            orderBtn.innerText = originalText;
+        });
+    }
+</script>
+
+</body>
+</html>
